@@ -125,6 +125,7 @@ body{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 .access-card .btn{width:100%;margin-top:8px}.access-message{min-height:21px;color:#a82f3f!important;letter-spacing:0;font-size:12px!important}
 .account-bar{max-width:900px;margin:auto;display:flex;align-items:center;gap:9px;padding:8px 14px;color:var(--muted);font-size:11px;flex-wrap:wrap}
 .account-bar strong{color:var(--main)}.account-bar .btn{font-size:11px;min-height:31px;padding:5px 10px}.account-bar #cloudStatus{flex:1;min-width:140px}
+.admin-dialog{width:min(730px,calc(100vw - 22px))}.admin-table-wrap{overflow-x:auto;margin:15px 0}.admin-table{width:100%;border-collapse:collapse;text-align:left;font-size:12px}.admin-table th,.admin-table td{padding:11px 8px;border-bottom:1px solid var(--line)}.admin-table thead{color:var(--muted)}.admin-actions{display:flex;gap:6px;flex-wrap:wrap}.admin-actions .btn{min-height:33px;padding:6px 10px;font-size:11px}.access-badge{border-radius:20px;padding:4px 9px;white-space:nowrap;background:#fff3cd;color:#755d13}.access-badge.approved{background:#e1f5e9;color:#116d5a}.access-badge.blocked{background:#fbe8e8;color:#a82f3f}.admin-owner{color:var(--main);font-size:11px}.about-copy{font-size:13px;line-height:1.65;color:var(--muted)}.about-copy h3{color:var(--ink);font-size:14px;margin-bottom:6px}.about-copy ul{padding-left:20px}.about-version{color:var(--main);font-weight:700}.access-note{background:var(--tint);padding:10px;border-radius:10px;color:var(--main)!important}
 #cloudConflict p{font-size:13px;line-height:1.6;color:var(--muted)}#cloudConflict .dialog-acts{flex-wrap:wrap}#cloudConflict .btn{flex-basis:100%}
 
 </style>
@@ -140,11 +141,11 @@ body{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
  <label class="field" id="confirmField" for="accessConfirm" hidden><span>Confirmar senha</span><input id="accessConfirm" type="password" inputmode="numeric" autocomplete="new-password" minlength="4" maxlength="4" pattern="[0-9]{4}"></label>
  <p class="access-message" id="accessMessage" role="status" aria-live="polite"></p>
  <button class="btn primary" id="accessSubmit" type="submit">Entrar</button>
- <button class="btn" id="accessToggle" type="button">Criar minha conta</button>
- </form><p>Maiúsculas e minúsculas dão acesso à mesma conta. Use o mesmo usuário e senha nos outros aparelhos.</p></div>
+ <button class="btn" id="accessToggle" type="button">Solicitar meu acesso</button>
+ </form><p class="access-note">Novos cadastros aguardam a liberação do administrador.</p><p>Maiúsculas e minúsculas dão acesso à mesma conta. Use o mesmo usuário e senha nos outros aparelhos.</p><button class="btn" id="aboutAccess" type="button">Sobre</button></div>
 </section>
 <div id="esApp" hidden>
- <div class="account-bar"><span>Conta <strong id="currentUser"></strong></span><span id="cloudStatus" role="status" aria-live="polite"></span><button class="btn" id="cloudRetry" type="button">Sincronizar</button><button class="btn" id="logoutAccount" type="button">Sair</button></div>
+ <div class="account-bar"><span>Conta <strong id="currentUser"></strong></span><span id="cloudStatus" role="status" aria-live="polite"></span><button class="btn" id="cloudRetry" type="button">Sincronizar</button><button class="btn primary" id="adminAccess" type="button" hidden>Liberar acessos</button><button class="btn" id="aboutApp" type="button">Sobre</button><button class="btn" id="logoutAccount" type="button">Sair</button></div>
 
 <header class="topdock" aria-label="Resumo e controles da compra">
   <div class="dock-inner">
@@ -195,6 +196,14 @@ body{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
  <div class="dialog-acts"><button class="btn" id="backupConflict" type="button">Baixar cópia deste aparelho</button><button class="btn primary" id="useCloud" type="button">Carregar lista da nuvem</button><button class="btn" id="useLocal" type="button">Manter lista deste aparelho</button></div>
 </div></dialog>
 </div>
+<dialog id="adminDialog" class="admin-dialog" aria-labelledby="adminTitle"><div class="dialog-inner"><div class="dialog-bar"><h2 id="adminTitle">Liberar acessos</h2><button class="close" id="closeAdmin" type="button" aria-label="Fechar painel de acessos">×</button></div>
+ <p class="notes">Painel exclusivo do DUT8. Libere os cadastros conhecidos ou bloqueie o acesso. As listas dos usuários são preservadas.</p><p id="adminMessage" class="notes" role="status" aria-live="polite"></p>
+ <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Usuário</th><th>Situação</th><th>Cadastro</th><th>Ações</th></tr></thead><tbody id="adminRows"></tbody></table></div><button class="btn" type="button" id="adminRefresh">Atualizar solicitações</button></div></dialog>
+<dialog id="aboutDialog" aria-labelledby="aboutTitle"><div class="dialog-inner"><div class="dialog-bar"><h2 id="aboutTitle">Sobre o ES Lista</h2><button class="close" type="button" id="closeAbout" aria-label="Fechar Sobre">×</button></div><div class="about-copy">
+ <p class="about-version">ES Lista | Versão 1.1</p><p>Lista de compras interativa com produtos por seção, quantidades, preços e totais da compra.</p>
+ <h3>Como usar</h3><ul><li>Solicite seu acesso com um usuário de 4 letras ou números e senha de 4 números.</li><li>Aguarde a aprovação do administrador DUT8 e entre com a mesma conta nos seus aparelhos.</li><li>Edite preços e quantidades, marque os produtos no carrinho e acompanhe os totais.</li><li>Use Organizar seções para ajustar sua lista e as opções de backup para guardar uma cópia.</li></ul>
+ <h3>Salvamento e acesso</h3><p>As alterações sincronizam automaticamente quando há conexão. Confira a mensagem de sincronização antes de fechar. Cada conta acessa sua própria lista; somente DUT8 pode liberar ou bloquear usuários.</p>
+ </div></div></dialog>
 <script type="application/json" id="embeddedSnapshot"></script>
 <script>
 (()=>{'use strict';
@@ -373,12 +382,13 @@ function esShowConflict(result){
  cloudConflict=result;esStatus('Conflito | escolha a lista que deseja manter');
  if(!$('cloudConflict').open)$('cloudConflict').showModal();
 }
-function esExpired(){
+function esExpired(message){
  esCache();account=null;activeGeneration++;clearTimeout(saveTimer);
  try{localStorage.removeItem(SESSION_KEY)}catch(e){}
  $('esApp').hidden=true;$('esAccess').hidden=false;
- $('accessMessage').textContent='Sua sessão terminou. Entre novamente para continuar.';
- if($('cloudConflict').open)$('cloudConflict').close();
+ $('accessMessage').textContent=message||'Sua sessão terminou. Entre novamente para continuar.';
+ $('adminAccess').hidden=true;
+ for(const dialog of document.querySelectorAll('dialog[open]'))dialog.close();
 }
 async function esPush(){
  if(!account||!dirty||sending||pulling||cloudConflict)return;
@@ -388,7 +398,7 @@ async function esPush(){
  try{
   const result=await esRpc('es_lista_write',{p_token:session.token,p_revision:revision,p_data:data});
   if(epoch!==activeGeneration)return;
-  if(result.expired){esExpired();return}
+  if(result.expired){esExpired(result.message);return}
   if(result.conflict){esShowConflict(result);return}
   if(!result.ok)throw Error('Falha ao salvar a lista');
   revision=result.revision;dirty=editGeneration!==generation;esCache();
@@ -408,7 +418,7 @@ async function esPull(){
  try{
   const result=await esRpc('es_lista_read',{p_token:account.token});
   if(epoch!==activeGeneration)return;
-  if(result.expired){esExpired();return}
+  if(result.expired){esExpired(result.message);return}
   if(!result.ok)throw Error('Falha de leitura');
   if(result.revision!==revision){
    if(dirty||generation!==editGeneration){esShowConflict(result);return}
@@ -420,7 +430,7 @@ async function esPull(){
 }
 async function esOpen(session,result){
  if(result.data&&!esValid(result.data))throw Error('A lista da conta é inválida. Nenhum dado foi substituído.');
- account=session;activeGeneration++;revision=result.revision;dirty=false;cloudConflict=null;
+ account={...session,is_admin:result.is_admin===true};activeGeneration++;revision=result.revision;dirty=false;cloudConflict=null;
  storageKey='es_lista_data_v1_'+session.username;
  state={items:DEFAULT.map(x=>({...x})),market:'Bramil',sectionOrder:[...CATEGORIES],customSections:[],schemaVersion:VERSION};
  let cached=null;try{cached=JSON.parse(localStorage.getItem(esCacheKey(session.username))||'null')}catch(e){}
@@ -434,6 +444,7 @@ async function esOpen(session,result){
  if(!result.data){dirty=true;editGeneration++;}
  try{localStorage.setItem(SESSION_KEY,JSON.stringify(session))}catch(e){}
  $('currentUser').textContent=session.username.toUpperCase();
+ $('adminAccess').hidden=!account.is_admin;
  $('esAccess').hidden=true;$('esApp').hidden=false;$('accessPin').value='';$('accessConfirm').value='';
  esCache();esStatus(dirty?'Alterações aguardando sincronização':'✓ Lista sincronizada');
  if(dirty&&!cloudConflict)esPush();
@@ -442,8 +453,8 @@ $('accessToggle').addEventListener('click',()=>{
  registerMode=!registerMode;$('confirmField').hidden=!registerMode;
  $('accessConfirm').required=registerMode;
  $('accessPin').autocomplete=registerMode?'new-password':'current-password';
- $('accessSubmit').textContent=registerMode?'Criar conta':'Entrar';
- $('accessToggle').textContent=registerMode?'Já tenho conta | Entrar':'Criar minha conta';
+ $('accessSubmit').textContent=registerMode?'Solicitar acesso':'Entrar';
+ $('accessToggle').textContent=registerMode?'Já tenho conta | Entrar':'Solicitar meu acesso';
  $('accessMessage').textContent='';
 });
 $('accessForm').addEventListener('submit',async e=>{
@@ -508,10 +519,55 @@ async function esResume(){
  try{
   const result=await esRpc('es_lista_read',{p_token:session.token});
   if(result.ok){await esOpen(session,result);$('accessMessage').textContent='';}
-  else {try{localStorage.removeItem(SESSION_KEY)}catch(e){}$('accessMessage').textContent='Entre para continuar.';}
+  else {try{localStorage.removeItem(SESSION_KEY)}catch(e){}$('accessMessage').textContent=result.message||'Entre para continuar.';}
  }catch(e){$('accessMessage').textContent='Conexão indisponível. Tente entrar novamente quando estiver online.';}
  finally{$('accessSubmit').disabled=false;}
 }
+for(const id of ['aboutAccess','aboutApp'])$(id).addEventListener('click',()=>{
+ if(!$('aboutDialog').open)$('aboutDialog').showModal();
+});
+$('closeAbout').addEventListener('click',()=>$('aboutDialog').close());
+$('aboutDialog').addEventListener('click',e=>{if(e.target===$('aboutDialog'))$('aboutDialog').close()});
+const esStatusLabels={pending:'Pendente',approved:'Liberado',blocked:'Bloqueado'};
+async function esAdminRefresh(){
+ if(!account?.is_admin)return;
+ $('adminMessage').textContent='Carregando usuários...';$('adminRefresh').disabled=true;
+ try{
+  const result=await esRpc('es_lista_admin_users',{p_token:account.token});
+  if(!result.ok)throw Error(result.message||'Não foi possível carregar os acessos.');
+  if(!Array.isArray(result.users)||result.users.some(u=>!/^[a-z0-9]{4}$/.test(u.username)||!esStatusLabels[u.status]))throw Error('Resposta inválida do painel.');
+  $('adminRows').innerHTML=result.users.map(user=>{
+   const name=user.username.toUpperCase();
+   const date=new Date(user.created_at).toLocaleDateString('pt-BR');
+   const controls=user.username==='dut8'?'<span class="admin-owner">Administrador</span>':
+    (user.status!=='approved'?`<button type="button" class="btn primary" data-approve-user="${user.username}">Liberar</button>`:'')+
+    (user.status!=='blocked'?`<button type="button" class="btn danger" data-block-user="${user.username}">Bloquear</button>`:'');
+   return `<tr><th scope="row">${name}</th><td><span class="access-badge ${user.status}">${esStatusLabels[user.status]}</span></td><td>${escapeHtml(date)}</td><td><div class="admin-actions">${controls}</div></td></tr>`;
+  }).join('');
+  const count=result.users.filter(user=>user.status==='pending').length;
+  $('adminMessage').textContent=count?`${count} ${count===1?'solicitação pendente':'solicitações pendentes'}.`:'Nenhuma solicitação pendente.';
+ }catch(error){$('adminMessage').textContent=error.message||'Falha ao carregar os acessos.';}
+ finally{$('adminRefresh').disabled=false;}
+}
+$('adminAccess').addEventListener('click',()=>{
+ if(!account?.is_admin)return;
+ $('adminDialog').showModal();esAdminRefresh();
+});
+$('closeAdmin').addEventListener('click',()=>$('adminDialog').close());
+$('adminRefresh').addEventListener('click',esAdminRefresh);
+$('adminRows').addEventListener('click',async e=>{
+ const button=e.target.closest('[data-approve-user],[data-block-user]');if(!button||!account?.is_admin)return;
+ const username=button.dataset.approveUser||button.dataset.blockUser;
+ const status=button.dataset.approveUser?'approved':'blocked';
+ if(status==='blocked'&&!confirm(`Bloquear o acesso de ${username.toUpperCase()}? A lista será preservada.`))return;
+ const buttons=[...$('adminRows').querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);
+ try{
+  const result=await esRpc('es_lista_admin_set',{p_token:account.token,p_username:username,p_status:status});
+  if(!result.ok)throw Error(result.message||'Não foi possível alterar o acesso.');
+  await esAdminRefresh();toast(status==='approved'?'Acesso liberado':'Acesso bloqueado');
+ }catch(error){$('adminMessage').textContent=error.message||'Falha ao alterar o acesso.';}
+ finally{buttons.forEach(b=>b.disabled=false);}
+});
 esResume();
 
 $('list').addEventListener('click',e=>{const plus=e.target.closest('[data-plus]');if(plus)return changeQty(plus.dataset.plus,1);const minus=e.target.closest('[data-minus]');if(minus)return changeQty(minus.dataset.minus,-1);const category=e.target.closest('[data-add-category]');if(category)return openEditor(null,false,category.dataset.addCategory);const pen=e.target.closest('[data-edit]');if(pen)return openEditor(pen.dataset.edit,true);const total=e.target.closest('[data-total-price]');if(total)return unitTap(total.dataset.totalPrice);const tick=e.target.closest('[data-toggle]');if(tick)return toggle(tick.dataset.toggle)});
@@ -534,8 +590,9 @@ function exportCurrentHtml(){
   const snapshot={id:`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,11)}`,state:JSON.parse(JSON.stringify(state))};
   const root=document.documentElement.cloneNode(true);
   root.querySelector('#esApp').hidden=true;root.querySelector('#esAccess').hidden=false;
+  root.querySelector('#adminAccess').hidden=true;
   for(const id of ['accessUser','accessPin','accessConfirm']){const el=root.querySelector('#'+id);if(el){el.value='';el.removeAttribute('value')}}
-  for(const id of ['currentUser','cloudStatus','accessMessage']){const el=root.querySelector('#'+id);if(el)el.textContent=''}
+  for(const id of ['currentUser','cloudStatus','accessMessage','adminRows','adminMessage']){const el=root.querySelector('#'+id);if(el)el.textContent=''}
   const target=root.querySelector('#embeddedSnapshot');
   if(!target)throw Error('Sem elemento para dados incorporados');
   target.textContent=JSON.stringify(snapshot).replace(/</g,'\u003c').replace(/\u2028/g,'\u2028').replace(/\u2029/g,'\u2029');
